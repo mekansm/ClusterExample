@@ -33,7 +33,7 @@ spec:
   selector:
     matchLabels:
       run: cluster-example
-  replicas: 3
+  replicas: {{.Values.nodeCount}}
   template:
     metadata:
       labels:
@@ -49,12 +49,14 @@ spec:
             fieldRef:
               fieldPath: status.podIP
         - name: CLUSTER_NODE_COUNT
-          value: "3"
+          value: "{{.Values.nodeCount}}"
         ports:
         - containerPort: 80
         livenessProbe:
           httpGet:
             path: /healthz
             port: 80
-          initialDelaySeconds: 3
-          periodSeconds: 3
+          initialDelaySeconds: 10
+          periodSeconds: 10
+          failureThreshold: 12
+          
